@@ -32,7 +32,7 @@ public class BoardController {
     }
     @GetMapping("/board/{board_no}") // 특정 게시글 조회
     public BoardResponseDto getBoard(@PathVariable Long board_no){
-        return boardService.getBoard(board_no);    }
+        return boardService.getBoard(board_no);}
     @PutMapping("/board/{board_no}") // 게시글 수정
     public BoardResponseDto updateBoard(@PathVariable Long board_no,
                                         @RequestBody BoardRequestDto requestDto){
