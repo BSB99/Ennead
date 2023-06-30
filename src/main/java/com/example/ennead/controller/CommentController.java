@@ -13,8 +13,13 @@ public class CommentController {
 
     private final CommentService commentService;
     @PostMapping("/{post_no}/comment")
-    public CommentResponseDto createComment(@PathVariable Long post_no, @RequestBody CommentRequestDto requesst) {
-        return commentService.createComment(post_no, requesst);
+    public CommentResponseDto createComment(@PathVariable Long post_no, @RequestBody CommentRequestDto request) {
+        return commentService.createComment(post_no, request);
+    }
+
+    @PutMapping("/{post_no}/comment/{comment_no}")
+    public CommentResponseDto updateComment(@PathVariable Long post_no, @PathVariable Long comment_no, @RequestBody CommentRequestDto request) {
+        return commentService.updateComment(post_no, comment_no, request);
     }
 
 }
