@@ -23,4 +23,5 @@ public class UserController {
         userService.signup(requestDto);
         return new ApiResponseDto("회원 가입 완료", HttpStatus.OK.value());
     }
+
 }
