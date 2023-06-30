@@ -1,5 +1,6 @@
 package com.example.ennead.controller;
 
+import com.example.ennead.dto.ApiResponseDto;
 import com.example.ennead.dto.CommentRequestDto;
 import com.example.ennead.dto.CommentResponseDto;
 import com.example.ennead.service.CommentService;
@@ -22,4 +23,8 @@ public class CommentController {
         return commentService.updateComment(post_no, comment_no, request);
     }
 
+    @DeleteMapping("/{post_no}/comment/{comment_no}")
+    public ApiResponseDto deleteComment(@PathVariable Long post_no, @PathVariable Long comment_no) {
+        return commentService.deleteComment(post_no, comment_no);
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.ennead.service;
 
+import com.example.ennead.dto.ApiResponseDto;
 import com.example.ennead.dto.CommentRequestDto;
 import com.example.ennead.dto.CommentResponseDto;
 import com.example.ennead.entity.Comment;
@@ -27,6 +28,14 @@ public class CommentService {
         comment.setContent(request.getContent());
 
         return new CommentResponseDto(comment);
+    }
+
+    public ApiResponseDto deleteComment(Long postNo, Long commentNo) {
+        Comment comment = findComment(commentNo);
+
+        commentRepository.delete(comment);
+
+        return new ApiResponseDto("댓글 삭제 성공", 200);
     }
 
     private Comment findComment(Long no) {
