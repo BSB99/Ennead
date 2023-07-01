@@ -2,19 +2,15 @@ package com.example.ennead.service;
 
 import com.example.ennead.dto.BoardRequestDto;
 import com.example.ennead.dto.BoardResponseDto;
-import com.example.ennead.dto.CategoryContentsResponseDto;
 import com.example.ennead.dto.CategoryResponseDto;
 import com.example.ennead.entity.Board;
 import com.example.ennead.entity.Category;
 import com.example.ennead.repository.BoardRepository;
 import com.example.ennead.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +72,7 @@ public class BoardService {
         }
         return new CategoryResponseDto(boardDtoList,category);
     }
-    private Board findName(Long id) {
+    public Board findName(Long id) {
         return boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
