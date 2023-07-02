@@ -29,11 +29,11 @@ public class Board extends Timestamped{
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    public Board(Category category , BoardRequestDto boardRequestDto){
+    public Board(Category category , BoardRequestDto boardRequestDto, User user){
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
         this.category = category;
-        this.nickname = boardRequestDto.getNickname();
+        this.nickname = user.getNickname();
     }
 
     public void update(BoardRequestDto requestDto) {
