@@ -22,7 +22,7 @@ public class Board extends Timestamped{
     @Column(name = "title" , nullable = false)
     private String title;
 
-    @Column(name = "nickname" , nullable = false , unique = true)
+    @Column(name = "nickname" , nullable = false )
     private String nickname;
 
     @Column(name = "content" , nullable = false)
