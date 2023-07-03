@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.URL;
 
 @Getter
 @Setter
@@ -24,4 +25,7 @@ public class SignupRequestDto {
     @Size(min = 8, max = 15, message = "8자 이상, 15자 이하")
     @Pattern(regexp = "^[A-Za-z0-9`~!@#$%^&*()-_=+]*$", message = "알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자(`~!@#$%^&*()-_=+)")
     private String password;
+
+    @URL
+    private String imageUrl;
 }
