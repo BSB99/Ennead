@@ -17,8 +17,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final BoardService boardService;
-    public CommentResponseDto createComment(String data, Long boardNo, CommentRequestDto request) {
-        User user = userService.getUser(data);
+    public CommentResponseDto createComment(User user, Long boardNo, CommentRequestDto request) {
         Board board = boardService.findId(boardNo);
 
         Comment comment = new Comment(request, user, board);
@@ -29,8 +28,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(String data, Long postNo, Long commentNo, CommentRequestDto request) {
-        User user = userService.getUser(data);
+    public CommentResponseDto updateComment(User user, Long postNo, Long commentNo, CommentRequestDto request) {
         Board board = boardService.findId(postNo);
         Comment comment = findComment(commentNo);
 
@@ -41,8 +39,7 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
-    public ApiResponseDto deleteComment(String data, Long postNo, Long commentNo) {
-        User user = userService.getUser(data);
+    public ApiResponseDto deleteComment(User user, Long postNo, Long commentNo) {
         Board board = boardService.findId(postNo);
         Comment comment = findComment(commentNo);
 
