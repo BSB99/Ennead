@@ -1,5 +1,6 @@
 package com.example.ennead.entity;
 
+import com.example.ennead.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,13 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String password;
 
-    public User(String username, String nickname, String password) {
-        this.username = username;
-        this.nickname = nickname;
+    @Column
+    private String imageUrl;
+
+    public User(SignupRequestDto requestDto, String password) {
+        this.username = requestDto.getUsername();
+        this.nickname = requestDto.getNickname();
         this.password = password;
+        this.imageUrl = requestDto.getImageUrl();
     }
 }

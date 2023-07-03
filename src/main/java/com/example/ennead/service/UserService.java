@@ -28,8 +28,13 @@ public class UserService {
             .ifPresent(user -> {
                 throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
             });
+        // 회원 중복 확인
+        userRepository.findByNickname(nickname)
+                .ifPresent(user -> {
+                    throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+                });
 
-        userRepository.save(new User(username, nickname, password));
+        userRepository.save(new User(requestDto, password));
     }
 
     public User getUser(String token) {
