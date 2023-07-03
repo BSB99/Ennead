@@ -68,4 +68,8 @@ public class CommentService {
             throw new IllegalArgumentException("작성자가 아닙니다!");
         }
     }
+
+    public CommentResponseDto getComment(Long id) {
+        return new CommentResponseDto(findComment(id));
+    }
 }

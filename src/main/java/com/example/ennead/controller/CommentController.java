@@ -28,4 +28,10 @@ public class CommentController {
     public ApiResponseDto deleteComment(@RequestHeader(JwtUtil.AUTHORIZATION_HEADER) String data, @PathVariable Long post_no, @PathVariable Long comment_no) {
         return commentService.deleteComment(data, post_no, comment_no);
     }
+
+    // 댓글 좋아요 테스트 기능.
+    @GetMapping("/comment/{comment_no}")
+    public CommentResponseDto getComments(@PathVariable Long comment_no) {
+        return commentService.getComment(comment_no);
+    }
 }

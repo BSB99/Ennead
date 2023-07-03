@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -26,6 +29,9 @@ public class Comment extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
+
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE})
+    private List<CommentLike> commentList = new ArrayList<>();
 
     public Comment(CommentRequestDto request, User user, Board board) {
         this.content = request.getContent();
