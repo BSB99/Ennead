@@ -85,4 +85,13 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
+    // JWT 토큰 substring
+    public String substringToken(String tokenValue) {
+        // StringUtils.hasText(tokenValue) -> 공백인지 null인지 확인
+        // tokenValue.startsWith(BEARER_PREFIX) -> Barear 로 시작하는지 안하는지 확인
+        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+            return tokenValue.substring(7);
+        }
+        throw new NullPointerException("Not Found Token");
+    }
 }

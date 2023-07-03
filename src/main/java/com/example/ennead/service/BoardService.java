@@ -34,7 +34,7 @@ public class BoardService {
 
     public BoardResponseDto postBoard(BoardRequestDto requestDto, String name , User user) {
         Category category=CategoryName(name);
-        Board board=new Board(category,requestDto , user);
+        Board board=new Board(category,requestDto,user);
         return new BoardResponseDto(boardRepository.save(board));
     }
 
@@ -43,7 +43,7 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
     @Transactional
-    public Board updateBoard(BoardRequestDto requestDto, Long boardNo, User user) {
+    public Board updateBoard(BoardRequestDto requestDto, Long boardNo , User user) {
         Board board=findId(boardNo);
         confirmTokenId(board  , user );
         board.update(requestDto);
@@ -51,9 +51,10 @@ public class BoardService {
 
     }
 
-    public String deleteBoard(Long boardNo, User user) {
+    public String deleteBoard(Long boardNo,User user) {
         Board board=findId(boardNo);
         confirmTokenId(board  , user );
+
         boardRepository.delete(board);
         return "삭제완료";
     }
@@ -67,7 +68,7 @@ public class BoardService {
         }
         return new CategoryResponseDto(boardDtoList,category);
     }
-    private Board findId(Long id) {
+    public Board findId(Long id) {
         return boardRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("게시글이 존재하지 않습니다")
         );
