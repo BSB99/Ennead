@@ -3,8 +3,10 @@ package com.example.ennead.controller;
 import com.example.ennead.dto.BoardRequestDto;
 import com.example.ennead.dto.BoardResponseDto;
 import com.example.ennead.dto.CategoryResponseDto;
+import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +24,10 @@ public class BoardController {
 
     }
     @PostMapping("/board") // 게시글 등록
-    public BoardResponseDto postBoard(@RequestParam("category")String name ,@RequestBody BoardRequestDto requestDto){
-        return boardService.postBoard(requestDto , name);
+    public BoardResponseDto postBoard(@RequestParam("category")String name,
+                                      @RequestBody BoardRequestDto requestDto ,
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return boardService.postBoard(requestDto , name , userDetails.getUser());
 
     }
     @GetMapping("/board") // 특정 카테고리 게시글 조회
@@ -35,12 +39,14 @@ public class BoardController {
         return boardService.getBoard(board_no);}
     @PutMapping("/board/{board_no}") // 게시글 수정
     public BoardResponseDto updateBoard(@PathVariable Long board_no,
-                                        @RequestBody BoardRequestDto requestDto){
-        return new BoardResponseDto(boardService.updateBoard(requestDto,board_no));
+                                        @RequestBody BoardRequestDto requestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return new BoardResponseDto(boardService.updateBoard(requestDto,board_no,userDetails.getUser()));
     }
     @DeleteMapping("/board/{board_no}") // 게시글 삭제
-    public String deleteBoard(@PathVariable Long board_no){
-        return boardService.deleteBoard(board_no);
+    public String deleteBoard(@PathVariable Long board_no,
+                              @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return boardService.deleteBoard(board_no,userDetails.getUser());
     }
 
 

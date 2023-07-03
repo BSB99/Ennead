@@ -19,7 +19,7 @@ public class CommentService {
     private final BoardService boardService;
     public CommentResponseDto createComment(String data, Long boardNo, CommentRequestDto request) {
         User user = userService.getUser(data);
-        Board board = boardService.findName(boardNo);
+        Board board = boardService.findId(boardNo);
 
         Comment comment = new Comment(request, user, board);
 
@@ -31,7 +31,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(String data, Long postNo, Long commentNo, CommentRequestDto request) {
         User user = userService.getUser(data);
-        Board board = boardService.findName(postNo);
+        Board board = boardService.findId(postNo);
         Comment comment = findComment(commentNo);
 
         commentVerificate(comment, user, board);
@@ -43,7 +43,7 @@ public class CommentService {
 
     public ApiResponseDto deleteComment(String data, Long postNo, Long commentNo) {
         User user = userService.getUser(data);
-        Board board = boardService.findName(postNo);
+        Board board = boardService.findId(postNo);
         Comment comment = findComment(commentNo);
 
         commentVerificate(comment, user, board);
