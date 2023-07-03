@@ -31,15 +31,14 @@ public class Board extends Timestamped{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-
     @OneToMany(mappedBy = "board", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
 
-    public Board(Category category , BoardRequestDto boardRequestDto){
+    public Board(Category category , BoardRequestDto boardRequestDto, User user){
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
         this.category = category;
-        this.nickname = boardRequestDto.getNickname();
+        this.nickname = user.getNickname();
     }
 
     public void update(BoardRequestDto requestDto) {
