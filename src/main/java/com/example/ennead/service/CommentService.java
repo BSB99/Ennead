@@ -17,8 +17,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final BoardService boardService;
-    public CommentResponseDto createComment(String data, Long boardNo, CommentRequestDto request) {
-        User user = userService.getUser(data);
+    public CommentResponseDto createComment(User user, Long boardNo, CommentRequestDto request) {
         Board board = boardService.findId(boardNo);
 
         Comment comment = new Comment(request, user, board);
@@ -29,8 +28,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(String data, Long postNo, Long commentNo, CommentRequestDto request) {
-        User user = userService.getUser(data);
+    public CommentResponseDto updateComment(User user, Long postNo, Long commentNo, CommentRequestDto request) {
         Board board = boardService.findId(postNo);
         Comment comment = findComment(commentNo);
 
@@ -41,8 +39,7 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
-    public ApiResponseDto deleteComment(String data, Long postNo, Long commentNo) {
-        User user = userService.getUser(data);
+    public ApiResponseDto deleteComment(User user, Long postNo, Long commentNo) {
         Board board = boardService.findId(postNo);
         Comment comment = findComment(commentNo);
 
@@ -53,7 +50,7 @@ public class CommentService {
         return new ApiResponseDto("댓글 삭제 성공", 200);
     }
 
-    private Comment findComment(Long no) {
+    public Comment findComment(Long no) {
         return commentRepository.findById(no).orElseThrow(() -> {
             throw new IllegalArgumentException("없는 댓글 입니다.");
         });
@@ -67,5 +64,9 @@ public class CommentService {
         if (comment.getUser().getId() != user.getId()) {
             throw new IllegalArgumentException("작성자가 아닙니다!");
         }
+    }
+
+    public CommentResponseDto getComment(Long id) {
+        return new CommentResponseDto(findComment(id));
     }
 }
