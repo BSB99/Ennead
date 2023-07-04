@@ -1,10 +1,9 @@
 package com.example.ennead.service;
 
+import com.example.ennead.dto.SigninRequestDto;
 import com.example.ennead.dto.SignupRequestDto;
 import com.example.ennead.entity.User;
-import com.example.ennead.jwt.JwtUtil;
 import com.example.ennead.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+
     public void signup(SignupRequestDto requestDto) {
 
         String username = requestDto.getUsername();
@@ -37,11 +36,16 @@ public class UserService {
         userRepository.save(new User(requestDto, password));
     }
 
-    public User getUser(String token) {
-        Claims claims = jwtUtil.getUserInfoFromToken(jwtUtil.substringToken(token));
+    public void signin(SigninRequestDto requestDto) {
+        String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
 
-        return userRepository.findByUsername((String)claims.get("sub")).orElseThrow(() ->
-                new NullPointerException("유저가 존재하지 않습니다"));
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
+        );
+
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
-
 }

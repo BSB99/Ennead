@@ -34,7 +34,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         // request의 header에서 token value 값 꺼내기
         String tokenValue = jwtUtil.getJwtFromHeader(request);
 
-        if (StringUtils.hasText(tokenValue)) {
+        if (tokenValue != null) {
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
