@@ -22,12 +22,10 @@ public class Board extends Timestamped{
     @Column(name = "title" , nullable = false)
     private String title;
 
-    @Column(name = "nickname" , nullable = false )
-    private String nickname;
 
     @Column(name = "content" , nullable = false)
     private String content;
-    @Column(name = "boardcount" , nullable = false)
+    @Column(name = "count" , nullable = false)
     private Long boardCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,7 +43,6 @@ public class Board extends Timestamped{
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
         this.category = category;
-        this.nickname = user.getNickname();
         this.boardCount = 0L;
         this.user = user;
     }

@@ -23,9 +23,10 @@ public class BoardResponseDto {
         this.content =board.getContent();
         this.createAt = board.getCreatedAt();
         this.modifiedAt = board.getUpdatedAt();
-        this.nickname = board.getNickname();
+        this.nickname = board.getUser().getNickname();
         this.category = board.getCategory().getName();
         this.BoardCount = board.getBoardCount();
+
     }
 //    public BoardResponseDto (Board board , List<CommentResponseDto> commentList){
 //        this.id = board.getId();
