@@ -64,7 +64,7 @@ public class BoardService {
         confirmTokenId(board  , user );
 
         boardRepository.delete(board);
-        return new ApiResponseDto("댓글 삭제 성공", 200);
+        return new ApiResponseDto("게시글 삭제 성공", 200);
     }
     public CategoryResponseDto getCategoryBoards(String name) {
         Category category=CategoryName(name);
