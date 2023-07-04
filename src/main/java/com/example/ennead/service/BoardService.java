@@ -97,6 +97,7 @@ public class BoardService {
     }
 
 
+
     public void viewCountUp(Long boardNo, Board board, HttpServletRequest request, HttpServletResponse response) {
         Cookie oldCookie = null;
         Cookie[] cookies = request.getCookies();

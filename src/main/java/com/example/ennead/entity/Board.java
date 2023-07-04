@@ -27,7 +27,7 @@ public class Board extends Timestamped{
 
     @Column(name = "content" , nullable = false)
     private String content;
-    @Column(name = "boardCount" ,nullable = false)
+    @Column(name = "boardcount" , nullable = false)
     private Long boardCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,6 +42,7 @@ public class Board extends Timestamped{
         this.content = boardRequestDto.getContent();
         this.category = category;
         this.nickname = user.getNickname();
+        this.boardCount = 0L;
     }
 
     public void update(BoardRequestDto requestDto) {
