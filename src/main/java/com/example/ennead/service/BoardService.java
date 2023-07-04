@@ -89,12 +89,13 @@ public class BoardService {
         }
     }
     private void confirmTokenId(Board board , User user ) {
-        if (board.getNickname().equals(user.getNickname())){
+        if (board.getUser().getNickname().equals(user.getNickname())){
             System.out.println("작성한 글이 맞습니다");
         } else {
             throw new IllegalArgumentException("해당 유저가 작성한글이 아닙니다");
         }
     }
+
 
 
     public void viewCountUp(Long boardNo, Board board, HttpServletRequest request, HttpServletResponse response) {
