@@ -1,5 +1,6 @@
 package com.example.ennead.controller;
 
+import com.example.ennead.dto.ApiResponseDto;
 import com.example.ennead.dto.BoardRequestDto;
 import com.example.ennead.dto.BoardResponseDto;
 import com.example.ennead.dto.CategoryResponseDto;
@@ -28,15 +29,18 @@ public class BoardController {
                                       @RequestBody BoardRequestDto requestDto ,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
         return boardService.postBoard(requestDto , name , userDetails.getUser());
-
     }
     @GetMapping("/board") // 특정 카테고리 게시글 조회
     public CategoryResponseDto getCategoryBoards(@RequestParam("category")String name){
         return boardService.getCategoryBoards(name);
     }
-    @GetMapping("/board/{board_no}") // 특정 게시글 조회
+    @GetMapping("/board/{board_no}") // 특정 게시글 조회 -> 조회할때 조회수도 1올라감
     public BoardResponseDto getBoard(@PathVariable Long board_no){
-        return boardService.getBoard(board_no);}
+        return boardService.getBoard(board_no);
+        // HttpServletRequest request,HttpServletResponse response
+
+
+    }
     @PutMapping("/board/{board_no}") // 게시글 수정
     public BoardResponseDto updateBoard(@PathVariable Long board_no,
                                         @RequestBody BoardRequestDto requestDto,
@@ -44,8 +48,8 @@ public class BoardController {
         return new BoardResponseDto(boardService.updateBoard(requestDto,board_no,userDetails.getUser()));
     }
     @DeleteMapping("/board/{board_no}") // 게시글 삭제
-    public String deleteBoard(@PathVariable Long board_no,
-                              @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ApiResponseDto deleteBoard(@PathVariable Long board_no,
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
         return boardService.deleteBoard(board_no,userDetails.getUser());
     }
 

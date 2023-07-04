@@ -11,11 +11,6 @@ public class CategoryResponseDto {
     Long id;
     String  name;
 
-//    public CategoryResponseDto(CategoryContentsResponseDto categoryContentsResponseDto){
-//        this.id = categoryContentsResponseDto.getId();
-//        this.name = categoryContentsResponseDto.getName();
-//    }
-
     public CategoryResponseDto(List<BoardResponseDto> categoryList , Category category){
         this.id = category.getId();
         this.name = category.getName();

@@ -27,10 +27,13 @@ public class Board extends Timestamped{
 
     @Column(name = "content" , nullable = false)
     private String content;
+    @Column(name = "boardCount" ,nullable = false)
+    private Long boardCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
     @OneToMany(mappedBy = "board", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
 
