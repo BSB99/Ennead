@@ -6,6 +6,8 @@ import com.example.ennead.dto.BoardResponseDto;
 import com.example.ennead.dto.CategoryResponseDto;
 import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +37,11 @@ public class BoardController {
         return boardService.getCategoryBoards(name);
     }
     @GetMapping("/board/{board_no}") // 특정 게시글 조회 -> 조회할때 조회수도 1올라감
-    public BoardResponseDto getBoard(@PathVariable Long board_no){
-        return boardService.getBoard(board_no);
-        // HttpServletRequest request,HttpServletResponse response
+    public BoardResponseDto getBoard(@PathVariable Long board_no,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response){
+        return boardService.getBoard(board_no,request,response);
+
 
 
     }
