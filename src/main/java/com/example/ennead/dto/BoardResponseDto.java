@@ -16,7 +16,7 @@ public class BoardResponseDto {
     private LocalDateTime modifiedAt;
     private String category;
     private Long BoardCount;
-//    private List<CommentResponseDto> commentList;
+    private List<CommentResponseDto> commentList;
     public BoardResponseDto(Board board){
         this.id = board.getId();
         this.title =board.getTitle();
@@ -26,14 +26,16 @@ public class BoardResponseDto {
         this.nickname = board.getUser().getNickname();
         this.category = board.getCategory().getName();
         this.BoardCount = board.getBoardCount();
-
     }
-//    public BoardResponseDto (Board board , List<CommentResponseDto> commentList){
-//        this.id = board.getId();
-//        this.title =board.getTitle();
-//        this.content =board.getContent();
-//        this.createAt = board.getCreatedAt();
-//        this.modifiedAt = board.getModifiedAt();
-//        this.commentList = commentList;
-//    }
+    public BoardResponseDto (Board board , List<CommentResponseDto> commentList){
+        this.id = board.getId();
+        this.title =board.getTitle();
+        this.content =board.getContent();
+        this.createAt = board.getCreatedAt();
+        this.modifiedAt = board.getUpdatedAt();
+        this.nickname = board.getUser().getNickname();
+        this.category = board.getCategory().getName();
+        this.BoardCount = board.getBoardCount();
+        this.commentList = commentList;
+    }
 }
