@@ -36,8 +36,7 @@ public class UserController {
     // 로그인
     @PostMapping("/signin")
     public ApiResponseDto signin(@RequestBody SigninRequestDto requestDto, HttpServletResponse response) {
-        userService.signin(requestDto);
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(requestDto.getUsername()));
+        userService.signin(requestDto, response);
         return new ApiResponseDto("로그인 완료", HttpStatus.OK.value());
     }
 

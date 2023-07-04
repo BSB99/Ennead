@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
@@ -57,14 +58,48 @@ public class JwtUtil {
                         .compact(); // 완성
     }
 
-    // header 에서 JWT 가져오기
-    public String getJwtFromHeader(HttpServletRequest request) {
-        String tokenValue = request.getHeader(AUTHORIZATION_HEADER);
-        log.info(tokenValue);
-        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(7);
+    // JWT Cookie 에 저장
+    public void addJwtToCookie(String token, HttpServletResponse res) {
+        try {
+            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+
+            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+            cookie.setPath("/");
+
+            // Response 객체에 Cookie 추가
+            res.addCookie(cookie);
+        } catch (UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    // Cookie에서 Jwt 가져오기
+    public String getTokenFromCookie(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
+                    try {
+                        return URLDecoder.decode(cookie.getValue(), "UTF-8"); // Encode 되어 넘어간 Value 다시 Decode
+                    } catch (UnsupportedEncodingException e) {
+                        return null;
+                    }
+                }
+            }
         }
         return null;
+    }
+
+    //가져왔을 때 'Bearer ' 이만큼 떼어내야함
+    // JWT 토큰 substring
+    public String substringToken(String tokenValue) {
+        // 공백과 null이 아닌지 확인 && 'Bearer '로 시작하는지 확인
+        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+            // 'Bearer ' 잘라내기
+            return tokenValue.substring(7);
+        }
+        log.error("Not Found Token");
+        throw new NullPointerException("Not Found Token");
     }
 
     // 토큰 검증

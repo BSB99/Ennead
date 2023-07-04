@@ -2,7 +2,6 @@ package com.example.ennead.jwt;
 
 import com.example.ennead.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
-import io.micrometer.common.lang.NonNullApi;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,14 +27,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService; // 사용자가 존재하는지
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         // request의 header에서 token value 값 꺼내기
-        String tokenValue = jwtUtil.getJwtFromHeader(request);
+        String tokenValue = jwtUtil.getTokenFromCookie(request);
         log.info(tokenValue);
 
-        if (tokenValue != null) {
-
+        if (StringUtils.hasText(tokenValue)) {
+            tokenValue = jwtUtil.substringToken(tokenValue);
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
                 return;
