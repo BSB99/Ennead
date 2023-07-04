@@ -1,11 +1,9 @@
 package com.example.ennead.service;
 
-import com.example.ennead.dto.ApiResponseDto;
-import com.example.ennead.dto.BoardRequestDto;
-import com.example.ennead.dto.BoardResponseDto;
-import com.example.ennead.dto.CategoryResponseDto;
+import com.example.ennead.dto.*;
 import com.example.ennead.entity.Board;
 import com.example.ennead.entity.Category;
+import com.example.ennead.entity.Comment;
 import com.example.ennead.entity.User;
 import com.example.ennead.repository.BoardRepository;
 import com.example.ennead.repository.CategoryRepository;
@@ -27,13 +25,10 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
 
     public List<BoardResponseDto> getBoards() {
-        List<BoardResponseDto> boardResponseDtoList =  new ArrayList<>();
+
         List<Board> boardList =  boardRepository.findAll();
-        for (Board board : boardList) {
-            BoardResponseDto boardResponseDto = new BoardResponseDto(board);
-            boardResponseDtoList.add(boardResponseDto);
-        }
-        return boardResponseDtoList;
+
+        return ListBoard(boardList);
     }
 
     public BoardResponseDto postBoard(BoardRequestDto requestDto, String name , User user) {
@@ -45,9 +40,10 @@ public class BoardService {
     @Transactional
     public BoardResponseDto getBoard(Long boardNo, HttpServletRequest request, HttpServletResponse response) {
         Board board=findId(boardNo);
+        List<CommentResponseDto> commentList=ListComment(board);
         viewCountUp(boardNo,board,request,response);
 
-        return new BoardResponseDto(board);
+        return new BoardResponseDto(board,commentList);
     }
     @Transactional
     public Board updateBoard(BoardRequestDto requestDto, Long boardNo , User user) {
@@ -61,18 +57,13 @@ public class BoardService {
     public ApiResponseDto deleteBoard(Long boardNo,User user) {
         Board board=findId(boardNo);
         confirmTokenId(board  , user );
-
         boardRepository.delete(board);
         return new ApiResponseDto("게시글 삭제 성공", 200);
     }
     public CategoryResponseDto getCategoryBoards(String name) {
         Category category=CategoryName(name);
         Collections.reverse(category.getBoardList());
-        List<BoardResponseDto> boardDtoList = new ArrayList<>();
-        for (Board board :  category.getBoardList()){
-            BoardResponseDto boardResponseDto = new  BoardResponseDto(board);
-            boardDtoList.add(boardResponseDto);
-        }
+        List<BoardResponseDto> boardDtoList=CategoryBoardList(category);
         return new CategoryResponseDto(boardDtoList,category);
     }
 
@@ -125,6 +116,34 @@ public class BoardService {
             response.addCookie(newCookie);                                                                                          // -> boardView라는 쿠키를 만들어서 새로운 쿠키를 생성함
         }
     } // -> 같은 사용자가 조회수를 중복으로 늘리지않게 하는 코드
+    public List<CommentResponseDto> ListComment(Board board) {
+        List<CommentResponseDto> commentList = new ArrayList<>();
+        for (Comment comments : board.getCommentList()) {
+            commentList.add(new CommentResponseDto(comments));
+        }
+        return commentList;
+    }
+    public List<BoardResponseDto> ListBoard(List<Board> boardList){
+        List<BoardResponseDto> boardResponseDtoList =  new ArrayList<>();
+        for (Board board : boardList) {
+            List<CommentResponseDto> commentList= ListComment(board);
+            BoardResponseDto boardResponseDto = new BoardResponseDto(board,commentList);
+            boardResponseDtoList.add(boardResponseDto);
+        }
+        return boardResponseDtoList;
+    }
+    public List<BoardResponseDto> CategoryBoardList(Category category){
+        List<BoardResponseDto> boardDtoList;
+        boardDtoList = new ArrayList<>();
+        for (Board board :  category.getBoardList()){
+            List<CommentResponseDto> commentList= ListComment(board);
+            BoardResponseDto boardResponseDto = new  BoardResponseDto(board,commentList);
+            boardDtoList.add(boardResponseDto);
+        }
+        return boardDtoList;
+    }
+
+
 
 
 }

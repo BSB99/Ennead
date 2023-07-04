@@ -4,6 +4,7 @@ import com.example.ennead.dto.ApiResponseDto;
 import com.example.ennead.dto.BoardRequestDto;
 import com.example.ennead.dto.BoardResponseDto;
 import com.example.ennead.dto.CategoryResponseDto;
+import com.example.ennead.entity.Board;
 import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,15 +42,13 @@ public class BoardController {
                                      HttpServletRequest request,
                                      HttpServletResponse response){
         return boardService.getBoard(board_no,request,response);
-
-
-
     }
     @PutMapping("/board/{board_no}") // 게시글 수정
     public BoardResponseDto updateBoard(@PathVariable Long board_no,
                                         @RequestBody BoardRequestDto requestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return new BoardResponseDto(boardService.updateBoard(requestDto,board_no,userDetails.getUser()));
+        Board board = boardService.updateBoard(requestDto,board_no,userDetails.getUser());
+        return new BoardResponseDto(board,boardService.ListComment(board));
     }
     @DeleteMapping("/board/{board_no}") // 게시글 삭제
     public ApiResponseDto deleteBoard(@PathVariable Long board_no,
