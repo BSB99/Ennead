@@ -15,6 +15,7 @@ public class BoardResponseDto {
     private LocalDateTime createAt;
     private LocalDateTime modifiedAt;
     private String category;
+    private Long BoardCount;
 //    private List<CommentResponseDto> commentList;
     public BoardResponseDto(Board board){
         this.id = board.getId();
@@ -24,6 +25,7 @@ public class BoardResponseDto {
         this.modifiedAt = board.getUpdatedAt();
         this.nickname = board.getNickname();
         this.category = board.getCategory().getName();
+        this.BoardCount = board.getBoardCount();
     }
 //    public BoardResponseDto (Board board , List<CommentResponseDto> commentList){
 //        this.id = board.getId();
