@@ -1,14 +1,18 @@
 package com.example.ennead.controller;
 
 import com.example.ennead.dto.ApiResponseDto;
+import com.example.ennead.dto.DeleteRequestDto;
 import com.example.ennead.dto.SigninRequestDto;
 import com.example.ennead.dto.SignupRequestDto;
 import com.example.ennead.jwt.JwtUtil;
+import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +41,13 @@ public class UserController {
         return new ApiResponseDto("로그인 완료", HttpStatus.OK.value());
     }
 
+    // 회원탈퇴
+    @PostMapping("/delete")
+    public ApiResponseDto deleteUser(@RequestBody DeleteRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        userService.deleteUser(requestDto, userDetails.getUser());
+        SecurityContextHolder.clearContext();
+        return new ApiResponseDto("회원 탈퇴 완료", HttpStatus.OK.value());
+    }
 
 }

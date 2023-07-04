@@ -1,5 +1,6 @@
 package com.example.ennead.service;
 
+import com.example.ennead.dto.DeleteRequestDto;
 import com.example.ennead.dto.SigninRequestDto;
 import com.example.ennead.dto.SignupRequestDto;
 import com.example.ennead.entity.User;
@@ -48,4 +49,17 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
+
+    public void deleteUser(DeleteRequestDto requestDto, User user) {
+
+        String password = requestDto.getPassword();
+
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        userRepository.delete(user);
+
+    }
+
 }
