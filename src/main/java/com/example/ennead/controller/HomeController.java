@@ -21,4 +21,9 @@ public class HomeController {
     public String signup() {
         return "signup";
     }
+
+    @GetMapping("/board")
+    public String board() {
+        return "boardInfo";
+    }
 }

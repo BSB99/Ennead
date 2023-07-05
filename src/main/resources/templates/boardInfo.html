@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>게시글 페이지</title>
+    <style>
+        /* CSS 스타일링 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .post {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .post .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .post .content {
+            margin-bottom: 10px;
+        }
+        .post .info {
+            font-size: 14px;
+            color: #666;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .comment-form {
+            margin-top: 20px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            height: 60px;
+        }
+        .comment-form button {
+            margin-top: 10px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 라이브러리 추가 -->
+</head>
+<body>
+<div class="post">
+    <h2 class="title">title1</h2>
+    <p class="content">content1</p>
+    <p class="info">작성자: nickname1</p>
+    <p class="info">작성일: 2023/06/15 8:29:07</p>
+</div>
+
+<div class="comments">
+    <h3>댓글</h3>
+    <!-- 댓글 목록을 동적으로 추가할 영역 -->
+</div>
+
+<div class="comment-form">
+    <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
+    <button id="submitComment">댓글 등록</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 페이지 로드시 AJAX 요청 수행
+        $.ajax({
+            url: 'http://localhost:8080/api/board/1',
+            type: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+            },
+            success: function(response) {
+                if (response.id) {
+                    console.log('AJAX 요청 성공');
+                    console.log(response)
+                    // 게시글 정보 추가
+                    $('.post .title').text(response.title);
+                    $('.post .content').text(response.content);
+                    $('.post .info:nth-child(1)').text('작성자: ' + response.nickname);
+                    $('.post .info:nth-child(2)').text('작성일: ' + response.createdAt);
+
+                    // 댓글 정보 추가
+                    var comments = response.commentList;
+                    var commentsHtml = '';
+
+                    for (var i = 0; i < comments.length; i++) {
+                        var comment = comments[i];
+                        var commentHtml = '<div class="comment">' +
+                            '<p>댓글 내용: ' + comment.content + '</p>' +
+                            '<p>작성자: ' + comment.username + '</p>' +
+                            '<p>작성일: ' + comment.createdAt + '</p>' +
+                            '</div>';
+
+                        commentsHtml += commentHtml;
+                    }
+
+                    $('.comments').append(commentsHtml);
+                } else {
+                    console.log('AJAX 요청 실패');
+                }
+            },
+            error: function() {
+                console.log('AJAX 요청 실패');
+            }
+        });
+
+        // 댓글 등록 버튼 클릭 이벤트 처리
+        $('#submitComment').click(function() {
+            let commentContent = $('#commentContent').val();
+            let boardNo = 1;
+            if (commentContent.trim() === '') {
+                alert('댓글 내용을 입력하세요');
+                return;
+            }
+
+            // 댓글 등록 요청 수행
+            $.ajax({
+                url: `http://localhost:8080/api/board/${boardNo}/comment`,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+                },
+                data: JSON.stringify({
+                    content: commentContent
+                }),
+                success: function(response) {
+                    if (response.id) {
+                        console.log('댓글 등록 성공');
+                        console.log(response);
+
+                        // 새로운 댓글 HTML 생성
+                        var commentHtml = '<div class="comment">' +
+                            '<p>댓글 내용: ' + response.content + '</p>' +
+                            '<p>작성자: ' + response.username + '</p>' +
+                            '<p>작성일: ' + response.createdAt + '</p>' +
+                            '</div>';
+
+                        // 새로운 댓글 추가
+                        $('.comments').append(commentHtml);
+
+                        // 입력 필드 초기화
+                        $('#commentContent').val('');
+                    } else {
+                        console.log('댓글 등록 실패');
+                    }
+                },
+                error: function() {
+                    console.log('댓글 등록 실패');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
