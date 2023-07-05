@@ -3,7 +3,6 @@ package com.example.ennead.controller;
 import com.example.ennead.dto.ApiResponseDto;
 import com.example.ennead.dto.CommentRequestDto;
 import com.example.ennead.dto.CommentResponseDto;
-import com.example.ennead.jwt.JwtUtil;
 import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.CommentService;
 import lombok.RequiredArgsConstructor;

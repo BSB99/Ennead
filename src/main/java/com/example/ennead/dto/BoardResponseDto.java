@@ -38,4 +38,7 @@ public class BoardResponseDto {
         this.BoardCount = board.getBoardCount();
         this.commentList = commentList;
     }
+
+
+
 }
