@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>회원가입</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .container h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .form-group input[type="submit"] {
+      background-color: #4CAF50;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('form').submit(function(event) {
+        event.preventDefault();
+        var username = $('#username').val();
+        var nickname = $('#nickname').val();
+        var password = $('#password').val();
+        var data = {
+          username: username,
+          nickname: nickname,
+          password: password
+        };
+
+        $.ajax({
+          url: 'http://localhost:8080/api/auth/signup',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(response) {
+            // 회원가입 성공 시 처리할 코드
+            if(response.statusCode == 200) {
+              window.location.href = 'http://localhost:8080/main/signin';
+            }
+          },
+          error: function() {
+            // 회원가입 실패 시 처리할 코드
+            console.log('회원가입 실패');
+          }
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="container">
+  <h2>회원가입</h2>
+  <form>
+    <div class="form-group">
+      <label for="username">사용자 이름:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+      <label for="nickname">닉네임:</label>
+      <input type="text" id="nickname" name="nickname" required>
+    </div>
+    <div class="form-group">
+      <label for="password">비밀번호:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div class="form-group">
+      <input type="submit" value="회원가입">
+    </div>
+  </form>
+</div>
+</body>
+</html>
