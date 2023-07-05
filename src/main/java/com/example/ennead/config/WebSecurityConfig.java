@@ -1,6 +1,6 @@
 package com.example.ennead.config;
 
-import com.example.ennead.jwt.JwtAuthenticationFilter;
+//import com.example.ennead.jwt.JwtAuthenticationFilter;
 import com.example.ennead.jwt.JwtAuthorizationFilter;
 import com.example.ennead.jwt.JwtUtil;
 import com.example.ennead.security.UserDetailsServiceImpl;
@@ -38,13 +38,13 @@ public class WebSecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-        // authentication filter에서 로그인 시도할 때 authenticationManager 사용
-        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        return filter;
-    }
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+//        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+//        // authentication filter에서 로그인 시도할 때 authenticationManager 사용
+//        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+//        return filter;
+//    }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
@@ -69,8 +69,9 @@ public class WebSecurityConfig {
         );
 
         // 필터 관리 (첫번째 인자 다음 두번째 인자)
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
