@@ -7,6 +7,7 @@ import com.example.ennead.dto.SignupRequestDto;
 import com.example.ennead.jwt.JwtUtil;
 import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,13 @@ public class UserController {
         userService.deleteUser(requestDto, userDetails.getUser());
         SecurityContextHolder.clearContext();
         return new ApiResponseDto("회원 탈퇴 완료", HttpStatus.OK.value());
+    }
+
+    // 로그아웃
+    @PostMapping("/signout")
+    public ApiResponseDto signout(HttpServletResponse response) {
+        jwtUtil.expireCookie(response);
+        return new ApiResponseDto("로그아웃 완료", HttpStatus.OK.value());
     }
 
 }
