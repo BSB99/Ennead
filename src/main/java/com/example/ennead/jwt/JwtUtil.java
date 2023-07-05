@@ -125,4 +125,12 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
+    public void expireCookie(HttpServletResponse response) {
+
+        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
 }

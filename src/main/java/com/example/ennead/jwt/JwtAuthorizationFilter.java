@@ -29,6 +29,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
+
+
         // request의 header에서 token value 값 꺼내기
         String tokenValue = jwtUtil.getTokenFromCookie(request);
         log.info(tokenValue);
