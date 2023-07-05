@@ -1,15 +1,13 @@
 package com.example.ennead.controller;
 
-import com.example.ennead.dto.ApiResponseDto;
-import com.example.ennead.dto.BoardRequestDto;
-import com.example.ennead.dto.BoardResponseDto;
-import com.example.ennead.dto.CategoryResponseDto;
+import com.example.ennead.dto.*;
 import com.example.ennead.entity.Board;
 import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +32,14 @@ public class BoardController {
         return boardService.postBoard(requestDto , name , userDetails.getUser());
     }
     @GetMapping("/board") // 특정 카테고리 게시글 조회
-    public CategoryResponseDto getCategoryBoards(@RequestParam("category")String name){
-        return boardService.getCategoryBoards(name);
+    public PageCategoryBoardDto getCategoryBoards(@RequestParam("category")String name,
+                                                  @RequestParam("page")int page){
+        Page<Board> pageBoard = boardService.getCategoryBoards(name,page-1);
+
+        PageInfo pageInfo = new PageInfo((int)pageBoard.getTotalElements(),page);
+        List<BoardResponseDto> boardList=pageBoard.map(BoardResponseDto::new).getContent();
+
+        return new PageCategoryBoardDto(boardList,pageInfo);
     }
     @GetMapping("/board/{board_no}") // 특정 게시글 조회 -> 조회할때 조회수도 1올라감
     public BoardResponseDto getBoard(@PathVariable Long board_no,

@@ -11,11 +11,14 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 @RequiredArgsConstructor
 @Service
@@ -60,11 +63,17 @@ public class BoardService {
         boardRepository.delete(board);
         return new ApiResponseDto("게시글 삭제 성공", 200);
     }
-    public CategoryResponseDto getCategoryBoards(String name) {
+    public Page<Board> getCategoryBoards(String name, int page) { // board entity의 id 내림차순
         Category category=CategoryName(name);
-        Collections.reverse(category.getBoardList());
-        List<BoardResponseDto> boardDtoList=CategoryBoardList(category);
-        return new CategoryResponseDto(boardDtoList,category);
+        Sort.Direction direction = Sort.Direction.DESC; //
+        Sort sort = Sort.by(direction,"id");
+
+        Pageable pageable = PageRequest.of(page,4,sort);
+
+        //        Collections.reverse(category.getBoardList());
+//        List<BoardResponseDto> boardDtoList=CategoryBoardList(category);
+//        return new CategoryResponseDto(boardDtoList,category);
+        return boardRepository.findAllByCategory(category , pageable);
     }
 
     public Board findId(Long id) {
@@ -116,6 +125,7 @@ public class BoardService {
             response.addCookie(newCookie);                                                                                          // -> boardView라는 쿠키를 만들어서 새로운 쿠키를 생성함
         }
     } // -> 같은 사용자가 조회수를 중복으로 늘리지않게 하는 코드
+
     public List<CommentResponseDto> ListComment(Board board) {
         List<CommentResponseDto> commentList = new ArrayList<>();
         for (Comment comments : board.getCommentList()) {
@@ -132,16 +142,16 @@ public class BoardService {
         }
         return boardResponseDtoList;
     }
-    public List<BoardResponseDto> CategoryBoardList(Category category){
-        List<BoardResponseDto> boardDtoList;
-        boardDtoList = new ArrayList<>();
-        for (Board board :  category.getBoardList()){
-            List<CommentResponseDto> commentList= ListComment(board);
-            BoardResponseDto boardResponseDto = new  BoardResponseDto(board,commentList);
-            boardDtoList.add(boardResponseDto);
-        }
-        return boardDtoList;
-    }
+//    public List<BoardResponseDto> CategoryBoardList(Category category){
+//        List<BoardResponseDto> boardDtoList;
+//        boardDtoList = new ArrayList<>();
+//        for (Board board :  category.getBoardList()){
+//            List<CommentResponseDto> commentList= ListComment(board);
+//            BoardResponseDto boardResponseDto = new  BoardResponseDto(board,commentList);
+//            boardDtoList.add(boardResponseDto);
+//        }
+//        return boardDtoList;
+//    }
 
 
 
