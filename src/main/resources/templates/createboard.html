@@ -11,15 +11,6 @@
             margin-top: 30px;
         }
 
-        .upper {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: right;
-
-            margin: 20px auto 20px auto;
-        }
-
         .upper button {
             background-color: #4CAF50;
             border-radius: 50%;
@@ -28,11 +19,6 @@
             text-align: center;
             line-height: 70px;
             font-size: 10px;
-        }
-
-        .create-board {
-
-
         }
 
         .category {
@@ -79,11 +65,8 @@
     <h1><a href="/main/board">Ennead</a></h1>
 </div>
 
-<div class="upper">
-    <button id="profile-btn"></button>
-</div>
 <div class="create-board">
-    <div id="categoryList" class="category">
+    <div id="select-category" class="category">
         <select id="categoryList2" class="form-select" aria-label="Default select example">
             <option selected>카테고리</option>
             <option>One</option>
@@ -141,12 +124,15 @@
 
         $('#submitBoard').click(function (event) {
             event.preventDefault();
+            let categoryName = document.getElementById('categoryList2').value;
             let boardTitle = $('#boardTitle').val();
             let boardContent = $('#boardContent').val();
             let data = {
                 title: boardTitle,
                 content: boardContent
             };
+
+            console.log(categoryName);
 
             if (boardTitle.trim() === '') {
                 alert('제목을 입력하세요');
@@ -157,9 +143,8 @@
                 return;
             }
 
-
             $.ajax({
-                url: 'http://localhost:8080/api/board',
+                url: `http://localhost:8080/api/board?category=`+categoryName,
                 type: 'POST',
                 contentType: 'application/json',
                 headers: {
