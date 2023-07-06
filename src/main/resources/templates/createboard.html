@@ -155,7 +155,7 @@
                     //console.log(response);
                     if (response.id) {
                         alert("게시글 등록 성공");
-                        window.location.href = 'http://localhost:8080/main/board';
+                        window.location.href = `http://localhost:8080/main/board?category=${categoryName}&page=1`;
                     } else {
                         console.log('게시글 등록 실패');
                     }

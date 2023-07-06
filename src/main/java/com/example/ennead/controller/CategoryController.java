@@ -14,7 +14,6 @@ import java.util.List;
 
 public class CategoryController {
     private final CategoryService categoryService;
-
     @PostMapping("/category") // 카테고리 등록
     public CategoryContentsResponseDto registerCategory(@RequestBody CategoryRequestDto RequestDto){
         return categoryService.registerCategory(RequestDto);

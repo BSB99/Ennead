@@ -128,7 +128,7 @@
 <body>
 <div class="container">
     <div class="enable-header">
-        <h1><a href="/main/board">Ennead</a></h1></div>
+        <h1><a href="/">Ennead</a></h1></div>
     <div class="post" style="position: relative;">
         <p id="targetIdParagraph" style="display: none;">targetId: <span th:text="${targetId}"></span></p>
         <h2 class="title">title1</h2>
@@ -211,7 +211,7 @@
                 success:function(response) {
                     if (response.statusCode == 200) {
                         alert('게시글 삭제 성공');
-                        window.location.href = 'http://localhost:8080/main/board';
+                        window.location.href = 'http://localhost:8080';
                     }
                 },
                 error: function() {
