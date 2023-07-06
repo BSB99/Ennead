@@ -41,7 +41,7 @@
 
             const confirmCheck = confirm("수정하시겠습니까?");
 
-            if (confirmCheck == true) {
+            if (confirmCheck === true) {
                 $.ajax({
                     type: 'PUT',
                     url: 'http://localhost:8080/profile/',
@@ -50,7 +50,7 @@
                 }).done(function (result) {
                     if (result) {
                         alert("회원 수정이 완료되었습니다.");
-                        window.location.href = "";
+                        window.location.href = "http://localhost:8080/main/profile";
                     } else {
                         alert("이미 사용 중인 닉네임입니다. 다시 입력해주세요.");
                         $('#newNickname').focus();
