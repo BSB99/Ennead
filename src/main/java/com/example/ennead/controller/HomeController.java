@@ -35,4 +35,9 @@ public class HomeController {
     public String categoryboard(){
         return "board";
     }
+
+    @GetMapping("/createboard")
+    public String createBoard() {
+        return "createboard";
+    }
 }

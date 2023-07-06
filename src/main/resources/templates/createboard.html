@@ -152,9 +152,10 @@
                 },
                 data: JSON.stringify(data),
                 success: function (response) {
-                    if (response.statusCode == 200) {
+                    //console.log(response);
+                    if (response.id) {
                         alert("게시글 등록 성공");
-                        window.location.href = 'http://localhost:8080/main/home';
+                        window.location.href = 'http://localhost:8080/main/board';
                     } else {
                         console.log('게시글 등록 실패');
                     }
