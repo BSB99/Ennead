@@ -2,6 +2,7 @@ package com.example.ennead.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -25,5 +26,9 @@ public class HomeController {
     @GetMapping("/board")
     public String board() {
         return "boardInfo";
+    }
+    @GetMapping("/categoryboard")
+    public String categoryboard(){
+        return "board";
     }
 }
