@@ -28,9 +28,9 @@ public class UserService {
 
         // 회원 중복 확인
         userRepository.findByUsername(username)
-            .ifPresent(user -> {
-                throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-            });
+                .ifPresent(user -> {
+                    throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+                });
         // 회원 중복 확인
         userRepository.findByNickname(nickname)
                 .ifPresent(user -> {
@@ -48,7 +48,7 @@ public class UserService {
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
 
-        if(!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         String token = jwtUtil.createToken(user.getUsername());
@@ -59,7 +59,7 @@ public class UserService {
 
         String password = requestDto.getPassword();
 
-        if(!passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 

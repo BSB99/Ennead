@@ -31,4 +31,14 @@ public class HomeController {
     public String categoryboard(){
         return "board";
     }
+
+    @GetMapping("/checkPwd")
+    public String checkPwdView(){
+        return "check-pwd";
+    }
+
+    @GetMapping("/profile/{user_no}")
+    public String update_profile(){
+        return "profile-update";
+    }
 }

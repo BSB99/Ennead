@@ -1,5 +1,6 @@
 package com.example.ennead.entity;
 
+import com.example.ennead.dto.ProfileRequestDto;
 import com.example.ennead.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,5 +34,11 @@ public class User extends Timestamped {
         this.nickname = requestDto.getNickname();
         this.password = password;
         this.imageUrl = requestDto.getImageUrl();
+    }
+
+    public void Update_Profile(ProfileRequestDto requestDto){
+        this.username = requestDto.getUsername();
+        this.nickname = requestDto.getNickname();
+        this.password = requestDto.getPassword();
     }
 }
