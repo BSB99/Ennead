@@ -44,7 +44,7 @@
             if (confirmCheck == true) {
                 $.ajax({
                     type: 'PUT',
-                    url: '',
+                    url: 'http://localhost:8080/profile/',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(data)
                 }).done(function (result) {

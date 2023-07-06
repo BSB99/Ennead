@@ -41,7 +41,7 @@ public class HomeController {
         return "check-pwd";
     }
 
-    @GetMapping("/profile/{user_no}")
+    @GetMapping("/profile")
     public String update_profile(){
         return "profile-update";
     }
