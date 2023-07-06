@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 @Controller
 @RequestMapping("/main")
 public class HomeController {
@@ -32,9 +35,17 @@ public class HomeController {
         return "boardInfo";
     }
     @GetMapping("/board")
-    public String categoryboard(){
+    public String categoryBoard(@RequestParam("category")String category,
+                                Model model) {
+
+        model.addAttribute("category", category);
         return "board";
     }
+//    @GetMapping("/board")
+//    public String categoryBoards(@RequestParam("category")String name, Model model){
+//        model.addAttribute("category", name);
+//        return "board";
+//    }
 
     @GetMapping("/checkPwd")
     public String checkPwdView(){

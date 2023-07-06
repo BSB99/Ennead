@@ -4,6 +4,7 @@ import com.example.ennead.dto.*;
 import com.example.ennead.entity.Board;
 import com.example.ennead.security.UserDetailsImpl;
 import com.example.ennead.service.BoardService;
+import com.example.ennead.service.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 @RestController
@@ -19,6 +22,7 @@ import java.util.List;
 
 public class BoardController {
     private final BoardService boardService;
+    private final CategoryService categoryService;
 
     @GetMapping("/board/all") // 게시글 조회
     public List<BoardResponseDto> getBoards(){
@@ -32,14 +36,17 @@ public class BoardController {
         return boardService.postBoard(requestDto , name , userDetails.getUser());
     }
     @GetMapping("/board") // 특정 카테고리 게시글 조회
-    public PageCategoryBoardDto getCategoryBoards(@RequestParam("category")String name,
-                                                  @RequestParam("page")int page){
-        Page<Board> pageBoard = boardService.getCategoryBoards(name,page-1);
+    public PageCategoryBoardDto getCategoryBoards(@RequestParam("category")String category,
+                                                  @RequestParam("page")int page) throws UnsupportedEncodingException {
+        System.out.println(category);
 
+
+        Page<Board> pageBoard = boardService.getCategoryBoards(category,page-1);
         PageInfo pageInfo = new PageInfo((int)pageBoard.getTotalElements(),page);
         List<BoardResponseDto> boardList=pageBoard.map(BoardResponseDto::new).getContent();
+        List<CategoryContentsResponseDto> categoryDtoList = categoryService.getCategorys();
 
-        return new PageCategoryBoardDto(boardList,pageInfo);
+        return new PageCategoryBoardDto(boardList,pageInfo,categoryDtoList);
     }
     @GetMapping("/board/{board_no}") // 특정 게시글 조회 -> 조회할때 조회수도 1올라감
     public BoardResponseDto getBoard(@PathVariable Long board_no,
