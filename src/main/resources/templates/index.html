@@ -37,6 +37,9 @@
             <button id="loginButton" class="btn btn-primary">로그인</button>
             <button id="signupButton" class="btn btn-primary">회원가입</button>
         </div>
+
+        <div id="categoryButtons">
+        </div>
     </div>
 </div>
 
@@ -71,7 +74,7 @@
                 success: function(response) {
                     if (response.statusCode == 200) {
                         alert("로그아웃 성공");
-                        window.location.href = 'http://localhost:8080/main/home';
+                        window.location.href = 'http://localhost:8080/main/signin';
                     } else {
                         console.log('로그아웃 실패');
                     }
@@ -81,12 +84,50 @@
                 }
             });
         });
+        $("#categoryButtons").on('click', function (e) {
+            e.preventDefault();
+            var tagId = e.target.id
+            var taghref = $(`#${tagId}`).text();
+            console.log(taghref)
+            $.ajax({
+                url: `http://localhost:8080/main/board?category=${taghref}&page=1`,
+                type: 'GET',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+                },
+                success: function (response) {
+                    if (response) {
+                        window.location.href = `http://localhost:8080/main/board?category=${taghref}&page=1`;
 
+                    }
+                }
+            })
+        })
         // 마이페이지 버튼 클릭 이벤트 처리
         $('#myPageButton').click(function() {
             // mypage html이 만들어지면 적어주세요
             //window.location.href = 'http://localhost:8080/main/mypage';
         });
+        $.ajax({
+            url: `http://localhost:8080/api/category`,
+            type: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+            },
+            success: function (response) {
+                if (response) {
+                    var categoryList = response;
+                    for (let i = 0; i < categoryList.length; i++) {
+                        var temp_categoryList = categoryList[i];
+                        var categoryListHtml = `<button id="category_${temp_categoryList.name}" className="btn btn-primary">${temp_categoryList.name}</button>`
+                        $('#categoryButtons').append(categoryListHtml);
+                    }
+                }
+            }
+        });
+
     });
 </script>
 </body>

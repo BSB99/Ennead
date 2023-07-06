@@ -318,10 +318,12 @@
             <button id="loginButton" class="btn btn-primary">로그인</button>
             <button id="signupButton" class="btn btn-primary">회원가입</button>
         </div>
+        <div id="categoryButtons">
+        </div>
     </div>
 </div>
 <div class="enable-header">
-    <h1><a href="/main/board">Ennead</a></h1></div>
+    <h1><a href="/">Ennead</a></h1></div>
 <div class="board_wrap">
     <div class="board_title">
         <strong>게시판</strong>
@@ -349,10 +351,15 @@
         </div>
         <div class="bt_wrap">
             <a href="/main/createboard" class="on">등록</a>
+
         </div>
+        <p id="targetIdParagraph" style="display: none;">targetId: <span th:text="${category}"></span></p>
+
     </div>
 </div>
 <script>
+    var boardNo = document.getElementById('targetIdParagraph').querySelector('span').innerText;
+    console.log(boardNo)
 
     $(document).ready(function () {
         if (document.cookie.includes('Authorization=')) {
@@ -384,7 +391,7 @@
                 success: function(response) {
                     if (response.statusCode == 200) {
                         alert("로그아웃 성공");
-                        window.location.href = 'http://localhost:8080/main/board';
+                        window.location.href = 'http://localhost:8080/main/signin';
                     } else {
                         console.log('로그아웃 실패');
                     }
@@ -394,6 +401,26 @@
                 }
             });
         });
+        $("#categoryButtons").on('click', function (e) {
+            e.preventDefault();
+            var tagId = e.target.id
+            var taghref = $(`#${tagId}`).text();
+            console.log(taghref)
+            $.ajax({
+                url: `http://localhost:8080/main/board?category=${taghref}&page=1`,
+                type: 'GET',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+                },
+                success: function (response) {
+                    if (response) {
+                        window.location.href = `http://localhost:8080/main/board?category=${taghref}&page=1`;
+
+                    }
+                }
+            })
+        })
 
         // 마이페이지 버튼 클릭 이벤트 처리
         $('#myPageButton').click(function() {
@@ -402,7 +429,7 @@
         });
         // 페이지 로드시 AJAX 요청 수행
         $.ajax({
-            url: 'http://localhost:8080/api/board?category=카테고리2&page=1',
+            url: `http://localhost:8080/api/board?category=${boardNo}&page=1`,
             type: 'GET',
             contentType: 'application/json',
             headers: {
@@ -414,6 +441,8 @@
                     console.log(response)
                     $('.board_list').empty();
                     $('.board_page').empty();
+                    $('#categoryButtons').empty();
+
                     var top = `<div class="top">
                         <div class="num">번호</div>
                         <div class="title">제목</div>
@@ -451,6 +480,12 @@
                         var temp_page = `<a class="num"  id = "${pageInfo.endPage + 1}", href="http://localhost:8080/api/board?category=카테고리2&page=${pageInfo.endPage + 1}"/>&gt;</a>`
                         $('.board_page').append(temp_page);
                     }
+                    var categoryList = response.categoryDtoList;
+                    for (let i = 0; i < categoryList.length; i++) {
+                        var temp_categoryList = categoryList[i];
+                        var categoryListHtml = `<button id="category_${temp_categoryList.name}" className="btn btn-primary">${temp_categoryList.name}</button>`
+                        $('#categoryButtons').append(categoryListHtml);
+                    }
                 } else {
                     console.log('AJAX 요청 실패');
                 }
@@ -479,6 +514,8 @@
                         console.log(response)
                         $('.board_list').empty();
                         $('.board_page').empty();
+                        $('#categoryButtons').empty();
+
                         var top = `<div class="top">
                         <div class="num">번호</div>
                         <div class="title">제목</div>
@@ -516,6 +553,12 @@
                         if (`${pageInfo.showNext}` == "true") {
                             var temp_page = `<a class="num"  id = "${pageInfo.endPage + 1}", href="http://localhost:8080/api/board?category=카테고리2&page=${pageInfo.endPage + 1}"/>&gt;</a>`
                             $('.board_page').append(temp_page);
+                        }
+                        var categoryList = response.categoryDtoList;
+                        for (let i = 0; i < categoryList.length; i++) {
+                            var temp_categoryList = categoryList[i];
+                            var categoryListHtml = `<button id="category_${temp_categoryList.name}" className="btn btn-primary">${temp_categoryList.name}</button>`
+                            $('#categoryButtons').append(categoryListHtml);
                         }
                     } else {
                         console.log('AJAX 요청 실패');
