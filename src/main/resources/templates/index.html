@@ -5,22 +5,8 @@
 
     <title>게시글 페이지</title>
     <style>
-        /* CSS 스타일링 */
         body {
             font-family: Arial, sans-serif;
-        }
-
-        .comment-form {
-            margin-top: 20px;
-        }
-        .comment-form textarea {
-            width: 100%;
-            height: 60px;
-        }
-        .comment-form button {
-            margin-top: 10px;
-            cursor: pointer;
-            float: right;
         }
 
         #logoutButton,
@@ -43,14 +29,11 @@
 
 <script>
     $(document).ready(function() {
-        // Check if JWT exists
         if (document.cookie.includes('Authorization=')) {
-            // JWT exists, show logout button and my page button, and hide login/signup buttons
             $('#logoutButton').show();
             $('#myPageButton').show();
             $('#loginSignupButtons').hide();
         } else {
-            // JWT does not exist, hide logout button and my page button, and show login/signup buttons
             $('#logoutButton').hide();
             $('#myPageButton').hide();
             $('#loginSignupButtons').show();
@@ -58,13 +41,11 @@
 
         // 로그인 버튼 클릭 이벤트 처리
         $('#loginButton').click(function() {
-            // Redirect to login page
             window.location.href = 'http://localhost:8080/main/signin';
         });
 
         // 회원가입 버튼 클릭 이벤트 처리
         $('#signupButton').click(function() {
-            // Redirect to signup page
             window.location.href = 'http://localhost:8080/main/signup';
         });
 
@@ -90,8 +71,8 @@
 
         // 마이페이지 버튼 클릭 이벤트 처리
         $('#myPageButton').click(function() {
-            // Redirect to My Page
-            window.location.href = 'http://localhost:8080/main/mypage';
+            // mypage html이 만들어지면 적어주세요
+            //window.location.href = 'http://localhost:8080/main/mypage';
         });
     });
 </script>
