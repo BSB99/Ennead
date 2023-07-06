@@ -118,6 +118,10 @@
         .comment-form button:hover {
             background-color: #555;
         }
+
+        .board-delete-button {
+            cursor: pointer;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
@@ -125,13 +129,15 @@
 <div class="container">
     <div class="enable-header">
         <h1><a href="/main/board">Ennead</a></h1></div>
-    <div class="post">
+    <div class="post" style="position: relative;">
         <p id="targetIdParagraph" style="display: none;">targetId: <span th:text="${targetId}"></span></p>
         <h2 class="title">title1</h2>
         <p class="content">content1</p>
         <p class="info">작성자: nickname1</p>
         <p class="info">작성일: 2023/06/15 8:29:07</p>
+        <button class="board-delete-button" style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%);"><i class="bi bi-trash"></i></button>
     </div>
+
 
     <div class="comments">
         <h3>댓글</h3>
@@ -192,6 +198,26 @@
             error: function() {
                 console.log('AJAX 요청 실패');
             }
+        })
+
+        // 게시글 삭제 요청
+        $(document).on('click', '.board-delete-button', function() {
+            $.ajax({
+                url: `http://localhost:8080/api/board/${boardNo}`,
+                type: 'DELETE',
+                headers: {
+                    'Authorization': document.cookie
+                },
+                success:function(response) {
+                    if (response.statusCode == 200) {
+                        alert('게시글 삭제 성공');
+                        window.location.href = 'http://localhost:8080/main/board';
+                    }
+                },
+                error: function() {
+                    alert('해당 유저가 작성한글이 아닙니다.');
+                }
+            });
         });
 
         //댓글 삭제 요청
