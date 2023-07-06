@@ -20,7 +20,7 @@
             } else {
                 $.ajax({
                     type: 'GET',
-                    url: '/profile/{user_no}',
+                    url: 'http://localhost:8080/profile/',
                     data: {'checkPassword': checkPassword},
                     datatype: "text"
                 }).done(function (result) {
@@ -52,6 +52,7 @@
     </div>
     <div class="text-center">
         <button class="btn bg-gradient-primary w-100 my-4 mb-2" id="checkPwd"> 비밀번호 확인</button>
-
+    </div>
+</div>
 </body>
 </html>
