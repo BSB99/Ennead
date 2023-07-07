@@ -96,4 +96,12 @@ public class UserService {
 
         return new ApiResponseDto("프로필 변경 성공", HttpStatus.OK.value());
     }
+
+    public UserResponseDto userBoard(User auth) {
+        User user = userRepository.findByUsername(auth.getUsername()).orElseThrow(() -> {
+            throw new IllegalArgumentException("user가 존재하지 않습니다");
+        });
+
+        return new UserResponseDto(user);
+    }
 }
