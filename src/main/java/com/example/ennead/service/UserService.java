@@ -1,15 +1,15 @@
 package com.example.ennead.service;
 
-import com.example.ennead.dto.DeleteRequestDto;
-import com.example.ennead.dto.SigninRequestDto;
-import com.example.ennead.dto.SignupRequestDto;
+import com.example.ennead.dto.*;
 import com.example.ennead.entity.User;
 import com.example.ennead.jwt.JwtUtil;
 import com.example.ennead.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -67,4 +67,33 @@ public class UserService {
 
     }
 
+    @Transactional
+    public ApiResponseDto updateProfile(ProfileRequestDto requestDto, User user) {
+
+        String nickname = requestDto.getNickname();
+        String password = requestDto.getPassword();
+        String imageUrl = requestDto.getImageUrl();
+
+        User admin = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> {
+            throw new IllegalArgumentException("user가 존재하지 않습니다");
+        });
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if(nickname != null) {
+            userRepository.findByNickname(nickname)
+                    .ifPresent(u -> {
+                        throw new IllegalArgumentException("이미 사용중인 닉네임입니다.");
+                    });
+            admin.setNickname(nickname);
+        }
+
+        if(imageUrl != null) {
+            admin.setImageUrl(imageUrl);
+        }
+
+        return new ApiResponseDto("프로필 변경 성공", HttpStatus.OK.value());
+    }
 }
