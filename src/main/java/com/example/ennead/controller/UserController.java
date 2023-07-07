@@ -55,4 +55,9 @@ public class UserController {
     public ApiResponseDto updateProfile(@Valid @RequestBody ProfileRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.updateProfile(requestDto, userDetails.getUser());
     }
+
+    @GetMapping("/board")
+    public UserResponseDto userBoard(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.userBoard(userDetails.getUser());
+    }
 }

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,6 +30,9 @@ public class User extends Timestamped {
 
     @Column
     private String imageUrl;
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.REMOVE})
+    private List<Board> boardList = new ArrayList<>();
 
     public User(SignupRequestDto requestDto, String password) {
         this.username = requestDto.getUsername();
