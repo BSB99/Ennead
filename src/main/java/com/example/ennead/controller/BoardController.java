@@ -37,7 +37,7 @@ public class BoardController {
     }
     @GetMapping("/board") // 특정 카테고리 게시글 조회
     public PageCategoryBoardDto getCategoryBoards(@RequestParam("category")String category,
-                                                  @RequestParam("page")int page) throws UnsupportedEncodingException {
+                                                  @RequestParam("page")int page)  {
         System.out.println(category);
 
 
