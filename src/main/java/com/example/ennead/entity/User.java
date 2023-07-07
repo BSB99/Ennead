@@ -37,7 +37,7 @@ public class User extends Timestamped {
     }
 
     public void Update_Profile(ProfileRequestDto requestDto){
-        this.username = requestDto.getUsername();
+        this.username = requestDto.getImageUrl();
         this.nickname = requestDto.getNickname();
         this.password = requestDto.getPassword();
     }
