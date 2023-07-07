@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <title>게시글 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #logoutButton,
+        #myPageButton {
+            display: none;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery 라이브러리 추가 -->
+</head>
+<body>
+<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">프로필</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div id="logoutMessage">
+            <button id="logoutButton" class="btn btn-primary">로그아웃</button>
+            <button id="myPageButton" class="btn btn-primary">마이페이지</button>
+        </div>
+
+        <div id="loginSignupButtons">
+            <button id="loginButton" class="btn btn-primary">로그인</button>
+            <button id="signupButton" class="btn btn-primary">회원가입</button>
+        </div>
+
+        <div id="categoryButtons">
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        if (document.cookie.includes('Authorization=')) {
+            $('#logoutButton').show();
+            $('#myPageButton').show();
+            $('#loginSignupButtons').hide();
+        } else {
+            $('#logoutButton').hide();
+            $('#myPageButton').hide();
+            $('#loginSignupButtons').show();
+        }
+
+        // 로그인 버튼 클릭 이벤트 처리
+        $('#loginButton').click(function() {
+            window.location.href = 'http://localhost:8080/main/signin';
+        });
+
+        // 회원가입 버튼 클릭 이벤트 처리
+        $('#signupButton').click(function() {
+            window.location.href = 'http://localhost:8080/main/signup';
+        });
+
+        // 로그아웃 버튼 클릭 이벤트 처리
+        $('#logoutButton').click(function() {
+            $.ajax({
+                url: 'http://localhost:8080/api/auth/signout',
+                type: 'POST',
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.statusCode == 200) {
+                        alert("로그아웃 성공");
+                        window.location.href = 'http://localhost:8080/main/signin';
+                    } else {
+                        console.log('로그아웃 실패');
+                    }
+                },
+                error: function() {
+                    console.log('로그아웃 실패');
+                }
+            });
+        });
+        $("#categoryButtons").on('click', function (e) {
+            e.preventDefault();
+            var tagId = e.target.id
+            var taghref = $(`#${tagId}`).text();
+            console.log(taghref)
+            $.ajax({
+                url: `http://localhost:8080/main/board?category=${taghref}&page=1`,
+                type: 'GET',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+                },
+                success: function (response) {
+                    if (response) {
+                        window.location.href = `http://localhost:8080/main/board?category=${taghref}&page=1`;
+
+                    }
+                }
+            })
+        })
+        // 마이페이지 버튼 클릭 이벤트 처리
+        $('#myPageButton').click(function() {
+            // mypage html이 만들어지면 적어주세요
+            //window.location.href = 'http://localhost:8080/main/mypage';
+        });
+        $.ajax({
+            url: `http://localhost:8080/api/category`,
+            type: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+            },
+            success: function (response) {
+                if (response) {
+                    var categoryList = response;
+                    for (let i = 0; i < categoryList.length; i++) {
+                        var temp_categoryList = categoryList[i];
+                        var categoryListHtml = `<button id="category_${temp_categoryList.name}" className="btn btn-primary">${temp_categoryList.name}</button>`
+                        $('#categoryButtons').append(categoryListHtml);
+                    }
+                }
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>새 글 작성</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .enable-header {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .enable-header h1 {
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .enable-header a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        .create-board {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 4px;
+            margin-top: 50px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .category select {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .title-box textarea,
+        .content-box textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .under {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .under button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .under button + button {
+            margin-left: 10px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="enable-header">
+    <h1><a href="/main/board">Ennead</a></h1>
+</div>
+
+<div class="create-board">
+    <div id="select-category" class="category">
+        <select id="categoryList2" class="form-select" aria-label="Default select example">
+            <option selected>카테고리</option>
+            <option>One</option>
+            <option>Two</option>
+            <option>Three</option>
+        </select>
+    </div>
+    <div class="title-box">
+        <textarea id="boardTitle" placeholder="제목 입력"></textarea>
+    </div>
+    <div class="content-box">
+        <textarea id="boardContent" placeholder="내용 입력"></textarea>
+    </div>
+</div>
+<div class="under">
+    <button id="submitBoard">작성하기</button>
+    <button id="cancelBoard" onclick="location.href='/main/home'">취소</button>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: 'http://localhost:8080/api/category',
+            type: 'GET',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+            },
+            success: function (response) {
+                console.log(response);
+                let temp_htmls = '' +
+                    '<option selected>카테고리</option>' +
+                    '';
+                $('#categoryList2').empty();
+
+                response.forEach((a) => {
+                    let categoryName = a['name'];
+                    console.log(categoryName);
+                    let temp_html = `
+                        <option>${categoryName}</option>
+                    `;
+                    temp_htmls += temp_html;
+                });
+                console.log('forEach문 끝');
+                $('#categoryList2').append(temp_htmls);
+            },
+            error: function () {
+                console.log('AJAX 요청 실패');
+            }
+        });
+
+        $('#submitBoard').click(function (event) {
+            event.preventDefault();
+            let categoryName = document.getElementById('categoryList2').value;
+            let boardTitle = $('#boardTitle').val();
+            let boardContent = $('#boardContent').val();
+            let data = {
+                title: boardTitle,
+                content: boardContent
+            };
+
+            console.log(categoryName);
+
+            if (boardTitle.trim() === '') {
+                alert('제목을 입력하세요');
+                return;
+            }
+            if (boardContent.trim() === '') {
+                alert('내용을 입력하세요');
+                return;
+            }
+
+            $.ajax({
+                url: `http://localhost:8080/api/board?category=`+categoryName,
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': document.cookie // 클라이언트 쿠키의 값을 전달
+                },
+                data: JSON.stringify(data),
+                success: function (response) {
+                    //console.log(response);
+                    if (response.id) {
+                        alert("게시글 등록 성공");
+                        window.location.href = `http://localhost:8080/main/board?category=${categoryName}&page=1`;
+                    } else {
+                        console.log('게시글 등록 실패');
+                    }
+                },
+                error: function () {
+                    console.log('게시글 등록 실패');
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</html>
