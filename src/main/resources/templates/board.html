@@ -502,7 +502,7 @@
             // var taghref = $(`#${tagId}`).text();
 
             $.ajax({
-                url: `http://localhost:8080/api/board?category=카테고리2&page=${tagId}`,
+                url: `http://localhost:8080/api/board?category=${boardNo}&page=${tagId}`,
                 type: 'GET',
                 contentType: 'application/json',
                 headers: {
